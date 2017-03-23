@@ -63,6 +63,10 @@ var User = bookshelf.Model.extend({
 
         isCampJoinPending: function () {
           return Number(this.attributes.camp_id) === -1
+        },
+
+        campId: function () {
+          return Number(this.attributes.camp_id)
         }
     }
 });
