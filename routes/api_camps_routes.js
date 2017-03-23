@@ -94,41 +94,50 @@ module.exports = function (app, passport) {
        * API: (PUT) edit camp
        * request => /camps/1/edit
        */
-    app.put('/camps/:id/edit', (req, res) => {
+    app.put('/camps/:id/edit',
         [userRole.isLoggedIn(), userRole.isAllowEditCamp()],
-        Camp.forge({ id: req.params.id }).fetch().then(function (camp) {
-            camp.save({
-                // for update or insert
-                updated_at: Date(),
-                event_id: constants.CURRENT_EVENT_ID,
-                camp_name_en: req.body.camp_name_en,
-                camp_name_he: req.body.camp_name_he,
-                camp_desc_he: req.body.camp_desc_he,
-                camp_desc_en: req.body.camp_desc_en,
-                status: req.body.status,
-                type: req.body.type,
-                contact_person_id: req.body.contact_person_id,
-                facebook_page_url: req.body.facebook_page_url,
-                accept_families: req.body.accept_families,
-                contact_person_name: req.body.contact_person_name,
-                contact_person_email: req.body.contact_person_email,
-                contact_person_phone: req.body.contact_person_phone,
-                main_contact: req.body.main_contact,
-                moop_contact: req.body.moop_contact,
-                safety_contact: req.body.safety_contact,
-                camp_activity_time: req.body.camp_activity_time,
-                child_friendly: req.body.child_friendly,
-                noise_level: req.body.noise_level,
-                public_activity_area_sqm: req.body.public_activity_area_sqm,
-                public_activity_area_desc: req.body.public_activity_area_desc,
-                support_art: req.body.support_art,
-                location_comments: req.body.location_comments,
-                camp_location_street: req.body.camp_location_street,
-                camp_location_street_time: req.body.camp_location_street_time,
-                camp_location_area: req.body.camp_location_area
-            }).then(function () {
-                res.json({ error: false, status: 'Camp updated' });
-                // });
+        (req, res) => {
+            Camp.forge({ id: req.params.id }).fetch().then(function (camp) {
+                camp.save({
+                    // for update or insert
+                    updated_at: Date(),
+                    event_id: constants.CURRENT_EVENT_ID,
+                    camp_name_en: req.body.camp_name_en,
+                    camp_name_he: req.body.camp_name_he,
+                    camp_desc_he: req.body.camp_desc_he,
+                    camp_desc_en: req.body.camp_desc_en,
+                    status: req.body.status,
+                    type: req.body.type,
+                    contact_person_id: req.body.contact_person_id,
+                    facebook_page_url: req.body.facebook_page_url,
+                    accept_families: req.body.accept_families,
+                    contact_person_name: req.body.contact_person_name,
+                    contact_person_email: req.body.contact_person_email,
+                    contact_person_phone: req.body.contact_person_phone,
+                    main_contact: req.body.main_contact,
+                    moop_contact: req.body.moop_contact,
+                    safety_contact: req.body.safety_contact,
+                    camp_activity_time: req.body.camp_activity_time,
+                    child_friendly: req.body.child_friendly,
+                    noise_level: req.body.noise_level,
+                    public_activity_area_sqm: req.body.public_activity_area_sqm,
+                    public_activity_area_desc: req.body.public_activity_area_desc,
+                    support_art: req.body.support_art,
+                    location_comments: req.body.location_comments,
+                    camp_location_street: req.body.camp_location_street,
+                    camp_location_street_time: req.body.camp_location_street_time,
+                    camp_location_area: req.body.camp_location_area
+                }).then(function () {
+                    res.json({ error: false, status: 'Camp updated' });
+                    // });
+                }).catch(function (err) {
+                    res.status(500).json({
+                        error: true,
+                        data: {
+                            message: err.message
+                        }
+                    });
+                });
             }).catch(function (err) {
                 res.status(500).json({
                     error: true,
@@ -137,23 +146,24 @@ module.exports = function (app, passport) {
                     }
                 });
             });
-        }).catch(function (err) {
-            res.status(500).json({
-                error: true,
-                data: {
-                    message: err.message
-                }
-            });
         });
-    });
 
     // PUBLISH
-    app.put('/camps/:id/publish', (req, res) => {
+    app.put('/camps/:id/publish',
         [userRole.isLoggedIn(), userRole.isAllowEditCamp()],
-        // If camp met all its requirements, can publish
-        Camp.forge({ id: req.params.id }).fetch().then(function (camp) {
-            camp.save({ enabled: '1' }).then(function () {
-                res.json({ error: false, status: 'Publish' });
+        (req, res) => {
+            // If camp met all its requirements, can publish
+            Camp.forge({ id: req.params.id }).fetch().then(function (camp) {
+                camp.save({ enabled: '1' }).then(function () {
+                    res.json({ error: false, status: 'Publish' });
+                }).catch(function (err) {
+                    res.status(500).json({
+                        error: true,
+                        data: {
+                            message: err.message
+                        }
+                    });
+                });
             }).catch(function (err) {
                 res.status(500).json({
                     error: true,
@@ -162,21 +172,22 @@ module.exports = function (app, passport) {
                     }
                 });
             });
-        }).catch(function (err) {
-            res.status(500).json({
-                error: true,
-                data: {
-                    message: err.message
-                }
-            });
         });
-    });
     // UNPUBLISH
-    app.put('/camps/:id/unpublish', (req, res) => {
+    app.put('/camps/:id/unpublish',
         [userRole.isLoggedIn(), userRole.isAllowEditCamp()],
-        Camp.forge({ id: req.params.id }).fetch().then(function (camp) {
-            camp.save({ enabled: '0' }).then(function () {
-                res.json({ error: false, status: 'Unpublish' });
+        (req, res) => {
+            Camp.forge({ id: req.params.id }).fetch().then(function (camp) {
+                camp.save({ enabled: '0' }).then(function () {
+                    res.json({ error: false, status: 'Unpublish' });
+                }).catch(function (err) {
+                    res.status(500).json({
+                        error: true,
+                        data: {
+                            message: err.message
+                        }
+                    });
+                });
             }).catch(function (err) {
                 res.status(500).json({
                     error: true,
@@ -185,15 +196,7 @@ module.exports = function (app, passport) {
                     }
                 });
             });
-        }).catch(function (err) {
-            res.status(500).json({
-                error: true,
-                data: {
-                    message: err.message
-                }
-            });
         });
-    });
 
     /**
      * API: (GET) return published camps with:
@@ -330,7 +333,6 @@ module.exports = function (app, passport) {
             require: true,
             columns: ['id', 'camp_name_en']
         }).then((camp) => {
-            debugger;
             if (camp !== null) {
                 res.status(200).json({ camps: camp.toJSON() })
             } else {
