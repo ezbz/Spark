@@ -87,5 +87,26 @@ app.controller("campEditController", ($scope, $http, $filter) => {
                 })
             });
     }
+    // Edit Cell
+    $scope.selected = {};
+
+    $scope.getTemplate = function (member) {
+        if (member.user_id === $scope.selected.user_id) return '../../../scripts/ng-partials/members-edit.html';
+        else return '../../../scripts/ng-partials/members-display.html';
+    };
+
+    $scope.editRow = function(member) {
+        $scope.selected = angular.copy(member);
+    };
+
+    $scope.saveRow = function (idx) {
+        console.log("Saving contact");
+        $scope.members[idx] = angular.copy($scope.selected);
+        $scope.reset();
+    };
+
+    $scope.reset = function () {
+        $scope.selected = {};
+    };
 
 });
